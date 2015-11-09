@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+NCDrill File Report For: Encoder.PcbDoc   11/8/15  10:10:58 PM
+---------------------------------------------------------------------------
+
+Layer Pair : Top Layer to Bottom Layer
+ASCII RoundHoles File : Encoder.TXT
+
+Tool         Hole Size           Hole Type     Hole Count Plated       Tool Travel
+---------------------------------------------------------------------------
+T1        28mil (0.7112mm)         Round          12               1.94 Inch (49.34 mm)
+T2        169.3mil (4.30022mm)     Round          3                1.36 Inch (34.48 mm)
+---------------------------------------------------------------------------
+Totals                                            15               3.30 Inch (83.82 mm)
+
+Total Processing Time (hh:mm:ss) : 00:00:00
