@@ -1,0 +1,38 @@
+Removed Pin From Net: NetName=A Pin=R2-2
+Removed Pin From Net: NetName=DIO Pin=R3-1
+Removed Pin From Net: NetName=B Pin=R4-2
+Removed Pin From Net: NetName=GND Pin=R5-1
+Removed Pin From Net: NetName=A Pin=R5-2
+Removed Pin From Net: NetName=GND Pin=R6-1
+Removed Pin From Net: NetName=DIO Pin=R6-2
+Removed Pin From Net: NetName=GND Pin=R7-1
+Removed Pin From Net: NetName=B Pin=R7-2
+Removed Pin From Net: NetName=GND Pin=U1-2
+Removed Pin From Net: NetName=CS Pin=U1-4
+Removed Pin From Net: NetName=GND Pin=U1-5
+Removed Pin From Net: NetName=VCC Pin=U1-7
+Removed Pin From Net: NetName=CLK Pin=U1-9
+Removed Member From Class: ClassName=Encoder Member=R3
+Removed Member From Class: ClassName=Encoder Member=R4
+Removed Member From Class: ClassName=Encoder Member=R5
+Removed Member From Class: ClassName=Encoder Member=R6
+Removed Member From Class: ClassName=Encoder Member=R7
+Change Component DesignItemId : Designator=U1 Old DesignItemId=CMP-0555-00029-2 New DesignItemId=CMP-0870-00004-1
+Change Component DesignItemId : Designator=R1 Old DesignItemId=CMP-1012-00034-1 New DesignItemId=CMP-1012-00064-1
+Change Component DesignItemId : Designator=R2 Old DesignItemId=CMP-1012-00064-1 New DesignItemId=CMP-1012-00074-1
+Change Component Footprint: Designator=U1 Old Footprint=AMS-SSOP-20-7200X5300DE_L New Footprint=AMS-SSOP-16-6200X5300DE_L
+Change Component Comment : Designator=R1 Old Comment=22R New Comment=390R
+Change Component Comment : Designator=R2 Old Comment=390R New Comment=1K
+Change Component Comment : Designator=U1 Old Comment=AS5134 New Comment=AS5045B
+Change Component Description : Designator=R1 Old Description=22R 0.1W 5% 0603 (1608 Metric)  SMD New Description=390R 0.1W 5% 0603 (1608 Metric)  SMD
+Change Component Description : Designator=R2 Old Description=390R 0.1W 5% 0603 (1608 Metric)  SMD New Description=1K 0.1W 5% 0603 (1608 Metric)  SMD
+Added Pin To Net: NetName=GND Pin=R2-1
+Added Pin To Net: NetName=VCC Pin=R2-2
+Added Pin To Net: NetName=A Pin=U1-3
+Added Pin To Net: NetName=B Pin=U1-4
+Added Pin To Net: NetName=GND Pin=U1-7
+Added Pin To Net: NetName=DIO Pin=U1-9
+Added Pin To Net: NetName=CLK Pin=U1-10
+Added Pin To Net: NetName=CS Pin=U1-11
+Added Pin To Net: NetName=VCC Pin=U1-15
+Added Pin To Net: NetName=VCC Pin=U1-16

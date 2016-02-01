@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+NCDrill File Report For: Controller.PcbDoc   1/18/16  5:35:17 PM
+---------------------------------------------------------------------------
+
+Layer Pair : Top Layer to Bottom Layer
+ASCII RoundHoles File : Controller.TXT
+
+Tool         Hole Size           Hole Type     Hole Count Plated       Tool Travel
+---------------------------------------------------------------------------
+T1        28mil (0.7112mm)         Round          4                1.13 Inch (28.81 mm)
+T2        31.5mil (0.8001mm)       Round          8                0.75 Inch (18.96 mm)
+T3        35.4mil (0.89916mm)      Round          4                0.30 Inch (7.62 mm)
+T4        38mil (0.9652mm)         Round          37               4.99 Inch (126.86 mm)
+---------------------------------------------------------------------------
+Totals                                            53               7.18 Inch (182.25 mm)
+
+Total Processing Time (hh:mm:ss) : 00:00:00

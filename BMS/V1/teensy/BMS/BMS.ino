@@ -1,4 +1,5 @@
-
+#include <SPI.h>
+#include "LTC68031.h"
 
 int dac_sdi = 7;
 int dac_sdo = 8;
@@ -13,6 +14,7 @@ int charge_switch = 18;
 int power_switch = 19;
 int power_led = 21;
 int precharge_switch = 22;
+LTC6803* ltc6803;
 
 IntervalTimer timer;
 boolean main_power = false;
@@ -39,10 +41,13 @@ void setup() {
   *portConfigRegister(power_switch) &= ~PORT_PCR_PS; //pull down
   pinMode(power_led, OUTPUT);
   pinMode(precharge_switch, OUTPUT);
+  LTC6803* ltc6803 = new LTC6803(csbi);
+  CORE_PIN13_CONFIG = PORT_PCR_MUX(0);
+  CORE_PIN14_CONFIG = PORT_PCR_DSE | PORT_PCR_MUX(2);
   analogReadResolution(16);
   attachInterrupt(power_switch, power, RISING);
   analogReadAveraging(1000);
-  timer.begin(main_loop, 1000);
+  timer.begin(main_loop, 100000);
 }
 
 void power()
@@ -90,6 +95,23 @@ void main_loop()
     digitalWrite(precharge_switch, LOW);
     digitalWrite(LED_BUILTIN, HIGH);
   }
+  uint8_t config[1][6];
+  config[0][0] = 0b01100001;
+  config[0][1] = 0b00000000;
+  config[0][2] = 0b00000000;
+  config[0][3] = 0b11111100;
+  config[0][4] = 0b00000000;
+  config[0][5] = 0b00000000;
+  ltc6803->LTC6803_wrcfg(1, config);
+  ltc6803->LTC6803_stcvad();
+  delay(13);
+  uint16_t cell_codes[1][12];
+  ltc6803->LTC6803_rdcv(1, cell_codes);
+  for(int i = 0; i < 12; i++)
+  {
+    Serial.println((cell_codes[0][i]) * 1.5);
+  }
+  Serial.println();
 }
 
 void loop() {

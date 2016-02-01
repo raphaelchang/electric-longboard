@@ -56,9 +56,11 @@ Copyright 2015 Linear Technology Corp. (LTC)
 #endif
 
 #define PEC_POLY 7
-//!Initializes the SPI port
-//! @return void
-void LTC6803_initialize();
+
+class LTC6803
+{
+public:
+LTC6803(int csbi_port);
 
 //! Function to start Cell Voltage measurement
 //! @return void
@@ -97,6 +99,10 @@ uint8_t pec8_calc(uint8_t len,          //!< the length of the data array
                   uint8_t *data         //!< data array
                  );
 
+private:
+int8_t spi_read(int8_t  data);
+void spi_write(int8_t  data);
+
 //! Writes an array of bytes out of the SPI port
 //! @return void
 void spi_write_array(uint8_t length,      //!< length of the data array being written on the SPI port
@@ -110,5 +116,8 @@ void spi_write_read(uint8_t *TxData,      //!< array of data to be written on th
                     uint8_t *rx_data,     //!< array that read data will be written too.
                     uint8_t RXlen       //!< number of bytes to be read from the SPI port.
                    );
+
+//int cs;
+};
 
 #endif

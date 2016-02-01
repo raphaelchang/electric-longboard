@@ -58,29 +58,26 @@ Copyright 2015 Linear Technology Corp. (LTC)
 
 #include <stdint.h>
 #include <Arduino.h>
-#include "Linduino.h"
-#include "LT_SPI.h"
 #include "LTC68031.h"
 #include <SPI.h>
+#define cs 10
 
 /***************************************************************************
 ***********6803 Functions***************************************************
 ***************************************************************************/
 
-
-//Initializes the SPI port
-void LTC6803_initialize()
+LTC6803::LTC6803(int csbi_port)
 {
-  quikeval_SPI_connect();
-  spi_enable(SPI_CLOCK_DIV16); // This will set the Linduino to have a 1MHz Clock
-
+  SPI.begin();
+  SPI.setClockDivider(SPI_CLOCK_DIV64);
+  SPI.setDataMode(SPI_MODE3);
+  //cs = csbi_port;
+  pinMode(cs, OUTPUT);
+  digitalWrite(cs, HIGH);
 }
 
-
-
-
 //Function that writes configuration of LTC6803-1/-3
-void LTC6803_wrcfg(uint8_t total_ic,uint8_t config[][6])
+void LTC6803::LTC6803_wrcfg(uint8_t total_ic,uint8_t config[][6])
 {
   uint8_t BYTES_IN_REG = 6;
   uint8_t CMD_LEN = 2+(7*total_ic);
@@ -108,15 +105,15 @@ void LTC6803_wrcfg(uint8_t total_ic,uint8_t config[][6])
     cmd_index = cmd_index + 1;
   }
 
-  output_low(LTC6803_CS);
+  digitalWrite(cs, LOW);
   spi_write_array(CMD_LEN, cmd);
-  output_high(LTC6803_CS);
+  digitalWrite(cs, HIGH);
   free(cmd);
 }
 
 
 //brief Function that reads configuration of LTC6803-1/-3
-int8_t LTC6803_rdcfg(uint8_t total_ic, //Number of ICs in the system
+int8_t LTC6803::LTC6803_rdcfg(uint8_t total_ic, //Number of ICs in the system
                      uint8_t r_config[][7] //A two dimensional array that the function stores the read configuration data.
                     )
 {
@@ -135,9 +132,9 @@ int8_t LTC6803_rdcfg(uint8_t total_ic, //Number of ICs in the system
   cmd[1] = 0xCE;
 
 
-  output_low(LTC6803_CS);
+  digitalWrite(cs, LOW);
   spi_write_read(cmd, 2, rx_data, (BYTES_IN_REG*total_ic));         //Read the configuration data of all ICs on the daisy chain into
-  output_high(LTC6803_CS);                          //rx_data[] array
+  digitalWrite(cs, HIGH);                          //rx_data[] array
 
   for (uint8_t current_ic = 0; current_ic < total_ic; current_ic++)       //executes for each LTC6803 in the daisy chain and packs the data
   {
@@ -164,28 +161,28 @@ int8_t LTC6803_rdcfg(uint8_t total_ic, //Number of ICs in the system
 
 
 //Function to start Cell Voltage measurement
-void LTC6803_stcvad()
+void LTC6803::LTC6803_stcvad()
 {
-  output_low(LTC6803_CS);
+  digitalWrite(cs, LOW);
   spi_write(0x10);
   spi_write(0xB0);
-  output_high(LTC6803_CS);
+  digitalWrite(cs, HIGH);
 }
 
 
 //Function to start Temp channel voltage measurement
-void LTC6803_sttmpad()
+void LTC6803::LTC6803_sttmpad()
 {
-  output_low(LTC6803_CS);
+  digitalWrite(cs, LOW);
   spi_write(0x30);
   spi_write(0x50);
-  output_high(LTC6803_CS);
+  digitalWrite(cs, HIGH);
 }
 
 
 
 //Function that reads Temp Voltage registers
-int8_t LTC6803_rdtmp(uint8_t total_ic, uint16_t temp_codes[][3])
+int8_t LTC6803::LTC6803_rdtmp(uint8_t total_ic, uint16_t temp_codes[][3])
 {
   int data_counter = 0;
   int pec_error = 0;
@@ -194,17 +191,17 @@ int8_t LTC6803_rdtmp(uint8_t total_ic, uint16_t temp_codes[][3])
   uint8_t *rx_data;
   rx_data = (uint8_t *) malloc((6*total_ic)*sizeof(uint8_t));
 
-  output_low(LTC6803_CS);
+  digitalWrite(cs, LOW);
   spi_write(0x0E);
   spi_write(0xEA);
   for (int i=0; i<total_ic; i++)
   {
     for ( int j = 0; j<6 ; j++)
     {
-      rx_data[data_counter++] =spi_read(0xFF);
+      rx_data[data_counter++] = spi_read(0xFF);
     }
   }
-  output_high(LTC6803_CS);
+  digitalWrite(cs, HIGH);
 
   int cell_counter = 0;
   data_counter = 0;
@@ -235,7 +232,7 @@ int8_t LTC6803_rdtmp(uint8_t total_ic, uint16_t temp_codes[][3])
 
 
 // Function that reads Cell Voltage registers
-uint8_t LTC6803_rdcv( uint8_t total_ic, uint16_t cell_codes[][12])
+uint8_t LTC6803::LTC6803_rdcv(uint8_t total_ic, uint16_t cell_codes[][12])
 {
   int data_counter =0;
   int pec_error = 0;
@@ -244,17 +241,17 @@ uint8_t LTC6803_rdcv( uint8_t total_ic, uint16_t cell_codes[][12])
   uint8_t *rx_data;
   rx_data = (uint8_t *) malloc((19*total_ic)*sizeof(uint8_t));
 
-  output_low(LTC6803_CS);
+  digitalWrite(cs, LOW);
   spi_write(0x04);
   spi_write(0xDC);
   for (int i=0; i<total_ic; i++)
   {
     for ( int j = 0; j<19 ; j++)
     {
-      rx_data[data_counter++] =spi_read(0xFF);
+      rx_data[data_counter++] = spi_read(0xFF);
     }
   }
-  output_high(LTC6803_CS);
+  digitalWrite(cs, HIGH);
 
   int cell_counter = 0;
   data_counter = 0;
@@ -294,11 +291,9 @@ uint8_t LTC6803_rdcv( uint8_t total_ic, uint16_t cell_codes[][12])
 
 
 //Function that calculates PEC byte
-uint8_t pec8_calc(uint8_t len, uint8_t *data)
+uint8_t LTC6803::pec8_calc(uint8_t len, uint8_t *data)
 {
-
   uint8_t  remainder = 0x41;//PEC_SEED;
-
 
   /*
    * Perform modulo-2 division, a byte at a time.
@@ -336,9 +331,25 @@ uint8_t pec8_calc(uint8_t len, uint8_t *data)
 
 }
 
+// Read and write a data byte using the SPI hardware
+// Returns the data byte read
+int8_t LTC6803::spi_read(int8_t  data) //!The data byte to be written
+{
+  //SPDR = data;                  //! 1) Start the SPI transfer
+  //while (!(SPSR & _BV(SPIF)));  //! 2) Wait until transfer complete
+  return SPI.transfer(data);
+}
+
+// Write a data byte using the SPI hardware
+void LTC6803::spi_write(int8_t  data)  // Byte to be written to SPI port
+{
+  //SPDR = data;                  //! 1) Start the SPI transfer
+  //while (!(SPSR & _BV(SPIF)));  //! 2) Wait until transfer complete
+  SPI.transfer(data);
+}
 
 //Writes an array of bytes out of the SPI port
-void spi_write_array(uint8_t len,
+void LTC6803::spi_write_array(uint8_t len,
                      uint8_t data[]
                     )
 {
@@ -350,7 +361,7 @@ void spi_write_array(uint8_t len,
 
 
 //Writes and read a set number of bytes using the SPI port.
-void spi_write_read(uint8_t tx_Data[],
+void LTC6803::spi_write_read(uint8_t tx_Data[],
                     uint8_t tx_len,
                     uint8_t *rx_data,
                     uint8_t rx_len
